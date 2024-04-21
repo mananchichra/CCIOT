@@ -136,18 +136,22 @@ void Sendreading()
   else statuscode2 = 0;
 
   int status = 0;
-  if(whichchannel==1)
+  ThingSpeak.setField(1,sensorvalue1);
+  ThingSpeak.setField(2,sensorvalue2);
+  status = ThingSpeak.writeFields(2513220, apiKey2);
+    // status = ThingSpeak.writeFields(2490599, apiKey1);
+
+  if (status == 200)
   {
-    ThingSpeak.setField(1,sensorvalue1);
-    ThingSpeak.setField(2,statuscode1);
-    status = ThingSpeak.writeFields(2490599, apiKey1);
+    Serial.println("Data sent to ThingSpeak successfully");
+  } else {
+    Serial.print("Problem sending data to ThingSpeak. HTTP error code ");
+    Serial.println(status);
   }
-  else
-  {
-    ThingSpeak.setField(1,sensorvalue2);
-    ThingSpeak.setField(2,statuscode2);
-    status = ThingSpeak.writeFields(2513220, apiKey2);
-  }
+
+  ThingSpeak.setField(2,statuscode1);
+  ThingSpeak.setField(4,statuscode2);
+  status = ThingSpeak.writeFields(2490599, apiKey1);
 
   if (status == 200)
   {
