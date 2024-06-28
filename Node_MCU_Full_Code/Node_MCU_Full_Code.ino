@@ -101,13 +101,13 @@ void loop()
 
   if(whichchannel==1)
   {
-    sensorvalue1 = sensorvalue;
-    State1 = State;
+    sensorvalue2 = sensorvalue;
+    State2 = State;
   }
   else
   {
-    sensorvalue2 = sensorvalue;
-    State2 = State;
+    sensorvalue1 = sensorvalue;
+    State1 = State;
   }
 
   timecount++;
@@ -127,6 +127,7 @@ void Sendreading()
   Serial.println(sensorvalue1);
   Serial.println(sensorvalue2);
 
+
   int statuscode1 = 0,statuscode2 = 0;
 
   if(State1 == "ON")statuscode1 = 1;
@@ -136,22 +137,18 @@ void Sendreading()
   else statuscode2 = 0;
 
   int status = 0;
-  ThingSpeak.setField(1,sensorvalue1);
-  ThingSpeak.setField(2,sensorvalue2);
-  status = ThingSpeak.writeFields(2513220, apiKey2);
-    // status = ThingSpeak.writeFields(2490599, apiKey1);
-
-  if (status == 200)
+  if(whichchannel==1)
   {
-    Serial.println("Data sent to ThingSpeak successfully");
-  } else {
-    Serial.print("Problem sending data to ThingSpeak. HTTP error code ");
-    Serial.println(status);
+    ThingSpeak.setField(1,sensorvalue1);
+    ThingSpeak.setField(2,statuscode1);
+    status = ThingSpeak.writeFields(2490599, apiKey1);
   }
-
-  ThingSpeak.setField(2,statuscode1);
-  ThingSpeak.setField(4,statuscode2);
-  status = ThingSpeak.writeFields(2490599, apiKey1);
+  else
+  {
+    ThingSpeak.setField(1,sensorvalue2);
+    ThingSpeak.setField(2,statuscode2);
+    status = ThingSpeak.writeFields(2513220, apiKey2);
+  }
 
   if (status == 200)
   {
